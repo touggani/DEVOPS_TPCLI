@@ -18,13 +18,13 @@ jobs:
       - checkout # check out the code in the project directory
       - restore_cache:
          key: yarn-packages-{{ checksum "yarn.lock" }}
-     - run: yarn global add node-gyp && yarn install
-     - run: yarn global add node-gyp && yarn install
-     - run: yarn lint
-     - run: yarn format --check
-     - run: yarn test:ci
-     - run: yarn test:e2e
-     - save_cache:
-         key: yarn-packages-{{ checksum "yarn.lcok" }}
-         paths:
-           - ./node_modules
+      - run: yarn global add node-gyp && yarn install
+      - run: yarn global add node-gyp && yarn install
+      - run: yarn lint
+      - run: yarn format --check
+      - run: yarn test:ci
+      - run: yarn test:e2e
+      - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lcok" }}
+          paths:
+            - ./node_modules
