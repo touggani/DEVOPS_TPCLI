@@ -1,0 +1,96 @@
+---
+to: src/modules/<%=h.changeCase.param(name)%>/<%=h.changeCase.param(name)%>.controller.ts
+---
+<%
+properName = h.changeCase.pascal(name);
+kebabName = h.changeCase.param(name);
+camelCase = h.changeCase.camel(name);
+%>import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { <%= properName %> } from './<%= kebabName %>.entity';
+import { <%= properName %>Service } from './<%= kebabName %>.service';
+import {
+  ApiBearerAuth,
+  ApiImplicitParam,
+  ApiResponse,
+  ApiUseTags,
+} from '@nestjs/swagger';
+import { <%= properName %>Dto } from './<%= kebabName %>.dto';
+
+
+@ApiUseTags('{{ sentenceCase name }}')
+@Controller()
+// @ApiBearerAuth()
+export class <%= properName %>Controller {
+  constructor(private readonly <%= camelCase %>Service: <%= properName %>Service) {}
+
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get a list of all {{ sentenceCase name }}.',
+    type: <%= properName %>,
+    isArray: true,
+  })
+  getAll(): Promise<<%= properName %>[]> {
+    return this.<%= camelCase %>Service.getAll();
+  }
+
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'The {{ sentenceCase name }} has been created.',
+    type: <%= properName %>,
+  })
+  saveNew(@Body() <%= camelCase %>Dto: <%= properName %>Dto): Promise<<%= properName %>> {
+    return this.<%= camelCase %>Service.saveNew(<%= camelCase %>Dto);
+  }
+
+  @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The {{ sentenceCase name }} with the matching id',
+    type: <%= properName %>,
+  })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+  async findOne(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<<%= properName %>> {
+    return (await this.<%= camelCase %>Service.getOneById(id)).orElseThrow(
+      () => new NotFoundException(),
+    );
+  }
+
+  @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The updated {{ sentenceCase name }} with the matching id',
+    type: <%= properName %>,
+  })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+  async updateOne(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() <%= camelCase %>Dto: <%= properName %>Dto,
+  ): Promise<<%= properName %>> {
+    return this.<%= camelCase %>Service.update(id, <%= camelCase %>Dto);
+  }
+
+  @Delete(':id')
+  @ApiResponse({
+  status: 200,
+    description: 'The {{ sentenceCase name }} with the matching id was deleted',
+  })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+  async deleteOne(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
+    await this.<%= camelCase %>Service.deleteById(id);
+  }
+}
