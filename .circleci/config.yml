@@ -1,19 +1,32 @@
 version: 2.1
 jobs:
   build:
-    docker: 
-      - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
-    steps:
-      - checkout # check out the code in the project directory
-      - restore_cache:
+    docker:
+      - image: circleci/node:12 # the primary container, where your job's comm
+        environment:
+          DATABASE_URL: postgres://psqluser:psqlpassword@localhost:5432/psdb
+          JWT_SECRET: secretJwt
+          API_PORT: 3000
+          API_HOST: localhost
+           API_PROTOCOL: http
+       - image: 'circleci/postgres:9.6.2-alpine'
+         environment:
+           POSTGRE_USER: psqluser
+           POSTGRE_PASSWORD: psqlpassword
+           POSTGRE_DB: psdb
+           POSTGRES_USER: psqluser
+           POSTGRES_PASSWORD: psqlpassword
+           POSTGRES_DB: psdb
+     steps:
+       - checkout # check out the code in the project directory
+       - restore_cache:
           key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn global add node-gyp && yarn install
       - run: yarn global add node-gyp && yarn install
       - run: yarn lint
       - run: yarn format --check
       - run: yarn test:ci
+      - run: yarn test:e2e
       - save_cache:
           key: yarn-packages-{{ checksum "yarn.lcok" }}
           paths:
