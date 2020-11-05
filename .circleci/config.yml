@@ -9,22 +9,22 @@ jobs:
           API_PORT: 3000
           API_HOST: localhost
           API_PROTOCOL: http
-       - image: 'circleci/postgres:9.6.2-alpine'
-         environment:
-           POSTGRES_USER: psqluser
-           POSTGRES_PASSWORD: psqlpassword
-           POSTGRES_DB: psdb
-     steps:
-       - checkout # check out the code in the project directory
-       - restore_cache:
-          key: yarn-packages-{{ checksum "yarn.lock" }}
-      - run: yarn global add node-gyp && yarn install
-      - run: yarn global add node-gyp && yarn install
-      - run: yarn lint
-      - run: yarn format --check
-      - run: yarn test:ci
-      - run: yarn test:e2e
-      - save_cache:
-          key: yarn-packages-{{ checksum "yarn.lcok" }}
-          paths:
-            - ./node_modules
+      - image: 'circleci/postgres:9.6.2-alpine'
+        environment:
+          POSTGRES_USER: psqluser
+          POSTGRES_PASSWORD: psqlpassword
+          POSTGRES_DB: psdb
+    steps:
+      - checkout # check out the code in the project directory
+      - restore_cache:
+         key: yarn-packages-{{ checksum "yarn.lock" }}
+     - run: yarn global add node-gyp && yarn install
+     - run: yarn global add node-gyp && yarn install
+     - run: yarn lint
+     - run: yarn format --check
+     - run: yarn test:ci
+     - run: yarn test:e2e
+     - save_cache:
+         key: yarn-packages-{{ checksum "yarn.lcok" }}
+         paths:
+           - ./node_modules
