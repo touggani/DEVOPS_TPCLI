@@ -25,6 +25,6 @@ jobs:
       - run: yarn test:ci
       - run: yarn test:e2e
       - save_cache:
-          key: yarn-packages-{{ checksum "yarn.lcok" }}
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ./node_modules
